@@ -107,11 +107,12 @@ function fmtPhone(el){
   else el.value=v.slice(0,3)+'-'+v.slice(3,6)+'-'+v.slice(6,10);
 }
 
-function iconRow(emoji, txt){
+function iconRow(letter, txt){
   return '<tr>'
     +'<td width="26" style="padding:0 0 6px 0;vertical-align:middle;">'
     +'<div style="width:20px;height:20px;background-color:#1A505B;border-radius:50%;'
-    +'text-align:center;line-height:20px;font-size:12px;display:inline-block;">'+emoji+'</div>'
+    +'text-align:center;line-height:20px;font-size:9px;font-weight:600;color:#ffffff;'
+    +'font-family:Arial,Helvetica,sans-serif;display:inline-block;mso-line-height-rule:exactly;">'+letter+'</div>'
     +'</td>'
     +'<td style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:12.5px;'
     +'color:#333;padding:0 0 6px 8px;vertical-align:middle;">'+txt+'</td>'
@@ -129,10 +130,10 @@ function buildSig(name,title,dept,phone,email){
   +'<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:10px;color:#2D7D8A;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:8px;">'+title+'&nbsp;&nbsp;&middot;&nbsp;&nbsp;'+dept+'</div>'
   +'<div style="width:220px;height:1px;background:#2D7D8A;margin-bottom:12px;"></div>'
   +'<table cellpadding="0" cellspacing="0" border="0">'
-  +iconRow('&#128222;',phone)
-  +iconRow('&#9993;',email)
-  +iconRow('&#128205;',addr)
-  +iconRow('&#127760;',web)
+  +iconRow('T',phone)
+  +iconRow('E',email)
+  +iconRow('A',addr)
+  +iconRow('W',web)
   +'</table>'
   +'</td>'
   +'<td style="width:1px;background:#C8DDE0;padding:0;font-size:0;">&nbsp;</td>'
