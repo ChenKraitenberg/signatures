@@ -106,27 +106,54 @@
   }
   .field input:focus { border-bottom-color: var(--teal-mid); }
   .field input::placeholder { color: #CCC; font-style: italic; font-size: 14px; }
-
-  .logo-section {
-    margin-top: 8px;
-    padding: 14px 16px;
-    background: #F9F7F4;
-    border: 1px dashed #D8D4CC;
-    font-size: 11px;
-    color: var(--mid);
-    line-height: 1.7;
-    cursor: pointer;
-    transition: border-color 0.2s;
-    text-align: center;
+  .field input[readonly] {
+    color: var(--light);
+    cursor: not-allowed;
+    border-bottom-style: dashed;
   }
-  .logo-section:hover { border-color: var(--teal-mid); }
-  .logo-section strong { display: block; color: var(--navy); font-size: 12px; margin-bottom: 3px; }
-  .logo-section.has-logo { border-style: solid; border-color: var(--teal-light); }
-  #logo-input { display: none; }
+
+  /* Email prefix + suffix combo */
+  .email-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+    border-bottom: 1px solid #E0DADA;
+    transition: border-color 0.2s;
+  }
+  .email-row:focus-within { border-bottom-color: var(--teal-mid); }
+  .email-row input {
+    border: none;
+    border-bottom: none;
+    flex: 1;
+    min-width: 0;
+    padding: 7px 0;
+  }
+  .email-row input:focus { border-bottom: none; }
+  .email-suffix {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--light);
+    padding: 7px 0;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .locked-field {
+    padding: 7px 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--light);
+    border-bottom: 1px dashed #E0DADA;
+  }
+  .locked-note {
+    font-size: 9px;
+    color: #CCC;
+    letter-spacing: 1px;
+    margin-top: 3px;
+  }
 
   .btn-copy {
     width: 100%;
-    margin-top: 22px;
+    margin-top: 28px;
     padding: 14px 24px;
     background: var(--navy);
     color: #fff;
@@ -214,36 +241,61 @@
 </div>
 
 <div class="workspace">
-
   <div class="form-panel">
+
     <div class="section-label">Employee Details</div>
-    <div class="field"><label>Full Name</label><input type="text" id="f-name" value="Chen Cohen" oninput="update()"></div>
-    <div class="field"><label>Title</label><input type="text" id="f-title" value="Business Analyst" oninput="update()"></div>
-    <div class="field"><label>Department / Service</label><input type="text" id="f-dept" value="Accounting Services" oninput="update()"></div>
+
+    <div class="field">
+      <label>Full Name</label>
+      <input type="text" id="f-name" placeholder="e.g. Chen Cohen" oninput="update()">
+    </div>
+    <div class="field">
+      <label>Title</label>
+      <input type="text" id="f-title" placeholder="e.g. Business Analyst" oninput="update()">
+    </div>
+    <div class="field">
+      <label>Department / Service</label>
+      <input type="text" id="f-dept" placeholder="e.g. Accounting Services" oninput="update()">
+    </div>
 
     <div class="section-label" style="margin-top:24px;">Contact Info</div>
-    <div class="field"><label>Phone</label><input type="text" id="f-phone" value="754-764-8966" oninput="update()"></div>
-    <div class="field"><label>Email</label><input type="text" id="f-email" value="chcohen@cpataxaccounting.net" oninput="update()"></div>
-    <div class="field"><label>Address</label><input type="text" id="f-addr" value="4000 Blvd Suite 555-S, Hollywood, FL 33021" oninput="update()"></div>
-    <div class="field"><label>Website</label><input type="text" id="f-web" value="www.cpataxaccounting.net" oninput="update()"></div>
 
-    <div class="section-label" style="margin-top:24px;">Logo</div>
-    <div class="logo-section" id="logo-drop" onclick="document.getElementById('logo-input').click()">
-      <strong>&#128247; Click to change logo</strong>
-      logo.jpg is loaded by default
+    <div class="field">
+      <label>Phone</label>
+      <input type="text" id="f-phone" placeholder="e.g. 754-764-8966" oninput="update()">
     </div>
-    <input type="file" id="logo-input" accept="image/*" onchange="loadLogo(event)">
 
-    <button class="btn-copy" id="copy-btn" onclick="copySignature()">Copy Signature to Outlook</button>
+    <div class="field">
+      <label>Email</label>
+      <div class="email-row">
+        <input type="text" id="f-email-prefix" placeholder="yourname" oninput="update()">
+        <span class="email-suffix">@cpataxaccounting.net</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Address</label>
+      <div class="locked-field">4000 Blvd Suite 555-S, Hollywood, FL 33021</div>
+      <div class="locked-note">&#128274; fixed for all employees</div>
+    </div>
+
+    <div class="field">
+      <label>Website</label>
+      <div class="locked-field">www.cpataxaccounting.net</div>
+      <div class="locked-note">&#128274; fixed for all employees</div>
+    </div>
+
+    <button class="btn-copy" id="copy-btn" onclick="copySignature()">Copy Signature</button>
 
     <div class="hint">
       <strong>How to use:</strong><br>
-      1. Fill in the employee details above<br>
-      2. Click <strong>"Copy Signature to Outlook"</strong><br>
-      3. Open Outlook → File → Options<br>
-      &nbsp;&nbsp;&nbsp;→ Mail → Signatures → New<br>
-      4. Click in the signature box → <strong>Ctrl+V</strong>
+      1. Fill in name, title, department &amp; phone<br>
+      2. Enter only the email prefix (before @)<br>
+      3. Click <strong>"Copy Signature"</strong><br>
+      4. Outlook → File → Options → Mail<br>
+      &nbsp;&nbsp;&nbsp;→ Signatures → New → <strong>Ctrl+V</strong>
     </div>
+
   </div>
 
   <div class="preview-panel">
@@ -263,57 +315,55 @@
       <div class="sig-container"><div id="sig-preview"></div></div>
     </div>
   </div>
-
 </div>
 
 <script>
-let logoSrc = 'logo.jpg';
-
 function get(id) { return document.getElementById(id).value.trim(); }
 
-function loadLogo(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    logoSrc = ev.target.result;
-    document.getElementById('logo-drop').classList.add('has-logo');
-    document.getElementById('logo-drop').innerHTML = '<strong>✓ ' + file.name + ' loaded</strong>Click to change again';
-    update();
-  };
-  reader.readAsDataURL(file);
-}
+function buildSig(name, title, dept, phone, email) {
+  const ADDR = '4000 Blvd Suite 555-S, Hollywood, FL 33021';
+  const WEB  = 'www.cpataxaccounting.net';
 
-function buildSig(name, title, dept, phone, email, addr, web, logo) {
   return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:'Cormorant Garamond',Georgia,serif;width:620px;border-collapse:collapse;background:#ffffff;">
   <tr><td colspan="3" style="background:#1A505B;height:3px;font-size:0;line-height:0;padding:0;"></td></tr>
   <tr>
-    <td style="padding:14px 20px;vertical-align:top;width:275px;">
+    <td style="padding:14px 20px;vertical-align:top;width:290px;">
+
       <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:600;color:#1A3A5C;letter-spacing:0.5px;line-height:1.1;margin-bottom:5px;">${name}</div>
       <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:10px;color:#2D7D8A;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:8px;">${title}&nbsp;&nbsp;&middot;&nbsp;&nbsp;${dept}</div>
-      <div style="width:210px;height:1px;background:#2D7D8A;margin-bottom:12px;"></div>
-      <table cellpadding="0" cellspacing="0" border="0">
+      <div style="width:220px;height:1px;background:#2D7D8A;margin-bottom:12px;"></div>
+
+      <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
         <tr>
-          <td style="padding:0 0 5px 0;vertical-align:middle;width:24px;"><div style="width:18px;height:18px;background:#1A505B;border-radius:50%;text-align:center;line-height:18px;font-size:9px;font-weight:500;color:#fff;font-family:Arial,sans-serif;">T</div></td>
-          <td style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12.5px;color:#333;padding:0 0 5px 8px;">${phone}</td>
+          <td style="width:26px;padding-bottom:5px;vertical-align:middle;">
+            <div style="width:18px;height:18px;background:#1A505B;border-radius:50%;text-align:center;line-height:18px;font-size:9px;font-weight:600;color:#fff;font-family:Arial,sans-serif;display:inline-block;">T</div>
+          </td>
+          <td style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12.5px;color:#333;padding-bottom:5px;white-space:nowrap;">${phone}</td>
         </tr>
         <tr>
-          <td style="padding:0 0 5px 0;vertical-align:middle;"><div style="width:18px;height:18px;background:#1A505B;border-radius:50%;text-align:center;line-height:18px;font-size:9px;font-weight:500;color:#fff;font-family:Arial,sans-serif;">E</div></td>
-          <td style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12.5px;color:#333;padding:0 0 5px 8px;">${email}</td>
+          <td style="width:26px;padding-bottom:5px;vertical-align:middle;">
+            <div style="width:18px;height:18px;background:#1A505B;border-radius:50%;text-align:center;line-height:18px;font-size:9px;font-weight:600;color:#fff;font-family:Arial,sans-serif;display:inline-block;">E</div>
+          </td>
+          <td style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12.5px;color:#333;padding-bottom:5px;">${email}</td>
         </tr>
         <tr>
-          <td style="padding:0 0 5px 0;vertical-align:middle;"><div style="width:18px;height:18px;background:#1A505B;border-radius:50%;text-align:center;line-height:18px;font-size:9px;font-weight:500;color:#fff;font-family:Arial,sans-serif;">A</div></td>
-          <td style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12.5px;color:#333;padding:0 0 5px 8px;">${addr}</td>
+          <td style="width:26px;padding-bottom:5px;vertical-align:middle;">
+            <div style="width:18px;height:18px;background:#1A505B;border-radius:50%;text-align:center;line-height:18px;font-size:9px;font-weight:600;color:#fff;font-family:Arial,sans-serif;display:inline-block;">A</div>
+          </td>
+          <td style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12.5px;color:#333;padding-bottom:5px;">${ADDR}</td>
         </tr>
         <tr>
-          <td style="vertical-align:middle;"><div style="width:18px;height:18px;background:#1A505B;border-radius:50%;text-align:center;line-height:18px;font-size:9px;font-weight:500;color:#fff;font-family:Arial,sans-serif;">W</div></td>
-          <td style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12.5px;color:#333;padding:0 0 0 8px;">${web}</td>
+          <td style="width:26px;vertical-align:middle;">
+            <div style="width:18px;height:18px;background:#1A505B;border-radius:50%;text-align:center;line-height:18px;font-size:9px;font-weight:600;color:#fff;font-family:Arial,sans-serif;display:inline-block;">W</div>
+          </td>
+          <td style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12.5px;color:#333;">${WEB}</td>
         </tr>
       </table>
+
     </td>
     <td style="width:1px;background:#C8DDE0;padding:0;font-size:0;">&nbsp;</td>
     <td style="padding:10px 16px;vertical-align:middle;text-align:center;">
-      <img src="${logo}" alt="Horizon Financial Advisors" width="285" style="display:block;max-width:285px;height:auto;" />
+      <img src="logo.jpg" alt="Horizon Financial Advisors" width="285" style="display:block;max-width:285px;height:auto;" />
     </td>
   </tr>
   <tr><td colspan="3" style="background:#1A505B;height:3px;font-size:0;line-height:0;padding:0;"></td></tr>
@@ -326,26 +376,27 @@ function buildSig(name, title, dept, phone, email, addr, web, logo) {
 }
 
 function update() {
-  document.getElementById('sig-preview').innerHTML = buildSig(
-    get('f-name')||'Chen Cohen', get('f-title')||'Business Analyst',
-    get('f-dept')||'Accounting Services', get('f-phone')||'754-764-8966',
-    get('f-email')||'chcohen@cpataxaccounting.net',
-    get('f-addr')||'4000 Blvd Suite 555-S, Hollywood, FL 33021',
-    get('f-web')||'www.cpataxaccounting.net', logoSrc
-  );
+  const name  = get('f-name')         || 'Full Name';
+  const title = get('f-title')        || 'Title';
+  const dept  = get('f-dept')         || 'Department';
+  const phone = get('f-phone')        || '000-000-0000';
+  const prefix= get('f-email-prefix') || 'yourname';
+  const email = prefix + '@cpataxaccounting.net';
+  document.getElementById('sig-preview').innerHTML = buildSig(name, title, dept, phone, email);
 }
 
 async function copySignature() {
-  const sigHTML = buildSig(
-    get('f-name')||'Chen Cohen', get('f-title')||'Business Analyst',
-    get('f-dept')||'Accounting Services', get('f-phone')||'754-764-8966',
-    get('f-email')||'chcohen@cpataxaccounting.net',
-    get('f-addr')||'4000 Blvd Suite 555-S, Hollywood, FL 33021',
-    get('f-web')||'www.cpataxaccounting.net', logoSrc
-  );
+  const name  = get('f-name')         || 'Full Name';
+  const title = get('f-title')        || 'Title';
+  const dept  = get('f-dept')         || 'Department';
+  const phone = get('f-phone')        || '000-000-0000';
+  const prefix= get('f-email-prefix') || 'yourname';
+  const email = prefix + '@cpataxaccounting.net';
+  const sigHTML = buildSig(name, title, dept, phone, email);
+
   const btn = document.getElementById('copy-btn');
   try {
-    await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([sigHTML],{type:'text/html'})})]);
+    await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([sigHTML], {type:'text/html'})})]);
   } catch(e) {
     const el = document.getElementById('sig-preview');
     const range = document.createRange();
@@ -356,9 +407,12 @@ async function copySignature() {
     document.execCommand('copy');
     sel.removeAllRanges();
   }
-  btn.textContent = '✓ Copied! — Now paste into Outlook';
+  btn.textContent = '✓ Copied! — Paste into Outlook';
   btn.classList.add('copied');
-  setTimeout(()=>{ btn.textContent='Copy Signature to Outlook'; btn.classList.remove('copied'); }, 3000);
+  setTimeout(() => {
+    btn.textContent = 'Copy Signature';
+    btn.classList.remove('copied');
+  }, 3000);
 }
 
 update();
