@@ -2,417 +2,181 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Horizon Financial — Signature Generator</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  :root {
-    --navy: #1A3A5C;
-    --teal: #1A505B;
-    --teal-mid: #2D7D8A;
-    --teal-light: #C8DDE0;
-    --gold: #B8963E;
-    --gold-light: #D4AF6A;
-    --dark: #1C1C1C;
-    --mid: #555;
-    --light: #999;
-  }
-  body {
-    background: #F2EFE9;
-    min-height: 100vh;
-    font-family: 'Jost', sans-serif;
-    color: var(--dark);
-    direction: ltr;
-  }
-  .page-header {
-    background: var(--navy);
-    padding: 32px 48px 28px;
-    border-bottom: 2px solid var(--gold);
-  }
-  .page-header .brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
-    font-weight: 400;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold-light);
-    margin-bottom: 7px;
-  }
-  .page-header h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    font-weight: 300;
-    color: #fff;
-    letter-spacing: 1px;
-  }
-  .page-header .subtitle {
-    font-size: 11px;
-    font-weight: 300;
-    color: rgba(255,255,255,0.4);
-    margin-top: 5px;
-    letter-spacing: 0.5px;
-  }
-  .workspace {
-    display: grid;
-    grid-template-columns: 350px 1fr;
-    min-height: calc(100vh - 105px);
-  }
-  .form-panel {
-    background: #fff;
-    padding: 34px 30px;
-    border-right: 1px solid #E8E4DC;
-    overflow-y: auto;
-  }
-  .section-label {
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, #E8E4DC, transparent);
-  }
-  .field { margin-bottom: 18px; }
-  .field label {
-    display: block;
-    font-size: 9px;
-    font-weight: 400;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--light);
-    margin-bottom: 6px;
-  }
-  .field input {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid #E0DADA;
-    padding: 7px 0;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 16px;
-    color: var(--dark);
-    background: transparent;
-    outline: none;
-    transition: border-color 0.2s;
-    direction: ltr;
-  }
-  .field input:focus { border-bottom-color: var(--teal-mid); }
-  .field input::placeholder { color: #CCC; font-style: italic; font-size: 14px; }
-  .field input[readonly] {
-    color: var(--light);
-    cursor: not-allowed;
-    border-bottom-style: dashed;
-  }
-
-  /* Email prefix + suffix combo */
-  .email-row {
-    display: flex;
-    align-items: flex-end;
-    gap: 0;
-    border-bottom: 1px solid #E0DADA;
-    transition: border-color 0.2s;
-  }
-  .email-row:focus-within { border-bottom-color: var(--teal-mid); }
-  .email-row input {
-    border: none;
-    border-bottom: none;
-    flex: 1;
-    min-width: 0;
-    padding: 7px 0;
-  }
-  .email-row input:focus { border-bottom: none; }
-  .email-suffix {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 16px;
-    color: var(--light);
-    padding: 7px 0;
-    white-space: nowrap;
-    user-select: none;
-  }
-  .locked-field {
-    padding: 7px 0;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 16px;
-    color: var(--light);
-    border-bottom: 1px dashed #E0DADA;
-  }
-  .locked-note {
-    font-size: 9px;
-    color: #CCC;
-    letter-spacing: 1px;
-    margin-top: 3px;
-  }
-
-  .btn-copy {
-    width: 100%;
-    margin-top: 28px;
-    padding: 14px 24px;
-    background: var(--navy);
-    color: #fff;
-    border: none;
-    font-family: 'Jost', sans-serif;
-    font-size: 11px;
-    font-weight: 400;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s;
-    position: relative;
-  }
-  .btn-copy::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--gold);
-  }
-  .btn-copy:hover { background: #122845; }
-  .btn-copy.copied { background: var(--teal); }
-
-  .hint {
-    margin-top: 18px;
-    padding: 14px 16px;
-    background: #F9F7F4;
-    border-left: 2px solid var(--gold-light);
-    font-size: 11px;
-    color: var(--mid);
-    line-height: 1.9;
-  }
-  .hint strong { color: var(--navy); font-weight: 500; }
-
-  .preview-panel {
-    background: #ECEAE5;
-    padding: 38px 44px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 18px;
-  }
-  .preview-label {
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--light);
-    align-self: flex-start;
-  }
-  .outlook-mock {
-    background: #fff;
-    width: 100%;
-    max-width: 700px;
-    border: 1px solid #D8D5CF;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
-  }
-  .outlook-toolbar {
-    background: #F3F2F1;
-    border-bottom: 1px solid #E1DFDD;
-    padding: 8px 14px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .outlook-dot { width: 10px; height: 10px; border-radius: 50%; background: #D0CDC7; }
-  .outlook-title { font-size: 10px; color: #888; letter-spacing: 1px; margin-left: 8px; }
-  .outlook-body {
-    padding: 18px 24px 12px;
-    font-family: Calibri, sans-serif;
-    font-size: 13px;
-    color: #333;
-    line-height: 1.6;
-    border-bottom: 1px solid #F0EDEA;
-  }
-  .sig-container { padding: 14px 24px 20px; }
+* { margin:0; padding:0; box-sizing:border-box; }
+:root { --navy:#1A3A5C; --teal:#1A505B; --teal-mid:#2D7D8A; --teal-light:#C8DDE0; --gold:#B8963E; --gold-light:#D4AF6A; --dark:#1C1C1C; --mid:#555; --light:#999; }
+body { background:#F2EFE9; min-height:100vh; font-family:'Jost',sans-serif; color:var(--dark); direction:ltr; }
+.page-header { background:var(--navy); padding:32px 48px 28px; border-bottom:2px solid var(--gold); }
+.brand { font-family:'Cormorant Garamond',serif; font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--gold-light); margin-bottom:7px; }
+.page-header h1 { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:300; color:#fff; letter-spacing:1px; }
+.subtitle { font-size:11px; font-weight:300; color:rgba(255,255,255,0.4); margin-top:5px; }
+.workspace { display:grid; grid-template-columns:350px 1fr; min-height:calc(100vh - 105px); }
+.form-panel { background:#fff; padding:34px 30px; border-right:1px solid #E8E4DC; overflow-y:auto; }
+.section-label { font-size:9px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:var(--gold); margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+.section-label::after { content:''; flex:1; height:1px; background:linear-gradient(to right,#E8E4DC,transparent); }
+.field { margin-bottom:18px; }
+.field label { display:block; font-size:9px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; color:#777; margin-bottom:6px; }
+.field input { width:100%; border:none; border-bottom:1px solid #E0DADA; padding:7px 0; font-family:'Cormorant Garamond',serif; font-size:16px; color:var(--dark); background:transparent; outline:none; transition:border-color .2s; direction:ltr; }
+.field input:focus { border-bottom-color:var(--teal-mid); }
+.field input::placeholder { color:#999; font-style:italic; font-size:15px; }
+.email-row { display:flex; align-items:flex-end; border-bottom:1px solid #E0DADA; transition:border-color .2s; }
+.email-row:focus-within { border-bottom-color:var(--teal-mid); }
+.email-row input { border:none; flex:1; min-width:0; padding:7px 0; font-family:'Cormorant Garamond',serif; font-size:16px; color:var(--dark); background:transparent; outline:none; }
+.email-row input::placeholder { color:#999; font-style:italic; }
+.email-suffix { font-family:'Cormorant Garamond',serif; font-size:16px; color:#999; padding:7px 0; white-space:nowrap; }
+.locked-field { padding:7px 0; font-family:'Cormorant Garamond',serif; font-size:15px; color:#aaa; border-bottom:1px dashed #E8E4DC; }
+.locked-note { font-size:9px; color:#CCC; letter-spacing:1px; margin-top:4px; }
+.btn-copy { width:100%; margin-top:28px; padding:14px 24px; background:var(--navy); color:#fff; border:none; font-family:'Jost',sans-serif; font-size:11px; font-weight:400; letter-spacing:2.5px; text-transform:uppercase; cursor:pointer; transition:background .2s; position:relative; }
+.btn-copy::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:var(--gold); }
+.btn-copy:hover { background:#122845; }
+.btn-copy.copied { background:var(--teal); }
+.hint { margin-top:18px; padding:14px 16px; background:#F9F7F4; border-left:2px solid var(--gold-light); font-size:11px; color:var(--mid); line-height:1.9; }
+.hint strong { color:var(--navy); font-weight:500; }
+.preview-panel { background:#ECEAE5; padding:38px 44px; display:flex; flex-direction:column; align-items:center; gap:18px; }
+.preview-label { font-size:9px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--light); align-self:flex-start; }
+.outlook-mock { background:#fff; width:100%; max-width:700px; border:1px solid #D8D5CF; box-shadow:0 8px 40px rgba(0,0,0,.08); }
+.outlook-toolbar { background:#F3F2F1; border-bottom:1px solid #E1DFDD; padding:8px 14px; display:flex; align-items:center; gap:6px; }
+.outlook-dot { width:10px; height:10px; border-radius:50%; background:#D0CDC7; }
+.outlook-title { font-size:10px; color:#888; letter-spacing:1px; margin-left:8px; }
+.outlook-body { padding:18px 24px 12px; font-family:Calibri,sans-serif; font-size:13px; color:#333; line-height:1.6; border-bottom:1px solid #F0EDEA; }
+.sig-container { padding:14px 24px 20px; }
 </style>
 </head>
 <body>
-
 <div class="page-header">
   <div class="brand">Horizon Financial Advisors</div>
   <h1>Email Signature Generator</h1>
-  <div class="subtitle">Fill in the details &nbsp;·&nbsp; Live preview &nbsp;·&nbsp; Copy to Outlook</div>
+  <div class="subtitle">Fill in the details &middot; Live preview &middot; Copy to Outlook</div>
 </div>
-
 <div class="workspace">
   <div class="form-panel">
-
     <div class="section-label">Employee Details</div>
-
-    <div class="field">
-      <label>Full Name</label>
-      <input type="text" id="f-name" placeholder="e.g. Chen Cohen" oninput="update()">
-    </div>
-    <div class="field">
-      <label>Title</label>
-      <input type="text" id="f-title" placeholder="e.g. Business Analyst" oninput="update()">
-    </div>
-    <div class="field">
-      <label>Department / Service</label>
-      <input type="text" id="f-dept" placeholder="e.g. Accounting Services" oninput="update()">
-    </div>
-
+    <div class="field"><label>Full Name</label><input type="text" id="f-name" placeholder="e.g. Chen Cohen" oninput="update()"></div>
+    <div class="field"><label>Title</label><input type="text" id="f-title" placeholder="e.g. Business Analyst" oninput="update()"></div>
+    <div class="field"><label>Department / Service</label><input type="text" id="f-dept" placeholder="e.g. Accounting Services" oninput="update()"></div>
     <div class="section-label" style="margin-top:24px;">Contact Info</div>
-
-    <div class="field">
-      <label>Phone</label>
-      <input type="text" id="f-phone" placeholder="e.g. 754-764-8966" oninput="update()">
-    </div>
-
+    <div class="field"><label>Phone</label><input type="text" id="f-phone" placeholder="e.g. 754-764-8966" oninput="fmtPhone(this);update()" maxlength="12"></div>
     <div class="field">
       <label>Email</label>
       <div class="email-row">
-        <input type="text" id="f-email-prefix" placeholder="yourname" oninput="update()">
+        <input type="text" id="f-email" placeholder="yourname" oninput="update()">
         <span class="email-suffix">@cpataxaccounting.net</span>
       </div>
     </div>
-
     <div class="field">
       <label>Address</label>
       <div class="locked-field">4000 Blvd Suite 555-S, Hollywood, FL 33021</div>
       <div class="locked-note">&#128274; fixed for all employees</div>
     </div>
-
     <div class="field">
       <label>Website</label>
       <div class="locked-field">www.cpataxaccounting.net</div>
       <div class="locked-note">&#128274; fixed for all employees</div>
     </div>
-
-    <button class="btn-copy" id="copy-btn" onclick="copySignature()">Copy Signature</button>
-
+    <button class="btn-copy" id="copy-btn" onclick="copySig()">Copy Signature</button>
     <div class="hint">
       <strong>How to use:</strong><br>
       1. Fill in name, title, department &amp; phone<br>
-      2. Enter only the email prefix (before @)<br>
-      3. Click <strong>"Copy Signature"</strong><br>
-      4. Outlook → File → Options → Mail<br>
-      &nbsp;&nbsp;&nbsp;→ Signatures → New → <strong>Ctrl+V</strong>
+      2. Enter email prefix only (before @)<br>
+      3. Click <strong>Copy Signature</strong><br>
+      4. Outlook &rarr; File &rarr; Options &rarr; Mail<br>
+      &nbsp;&nbsp;&rarr; Signatures &rarr; New &rarr; <strong>Ctrl+V</strong>
     </div>
-
   </div>
-
   <div class="preview-panel">
     <div class="preview-label">Live Preview — as it will appear in Outlook</div>
     <div class="outlook-mock">
       <div class="outlook-toolbar">
-        <div class="outlook-dot"></div>
-        <div class="outlook-dot"></div>
-        <div class="outlook-dot"></div>
+        <div class="outlook-dot"></div><div class="outlook-dot"></div><div class="outlook-dot"></div>
         <span class="outlook-title">New Message — Outlook</span>
       </div>
-      <div class="outlook-body">
-        Dear client,<br><br>
-        Please find attached the documents you requested.<br><br>
-        Best regards,
-      </div>
+      <div class="outlook-body">Dear client,<br><br>Please find attached the documents you requested.<br><br>Best regards,</div>
       <div class="sig-container"><div id="sig-preview"></div></div>
     </div>
   </div>
 </div>
-
 <script>
-function get(id) { return document.getElementById(id).value.trim(); }
+function get(id){ return document.getElementById(id).value.trim(); }
 
-function buildSig(name, title, dept, phone, email) {
-  const ADDR = '4000 Blvd Suite 555-S, Hollywood, FL 33021';
-  const WEB  = 'www.cpataxaccounting.net';
-
-  return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:'Cormorant Garamond',Georgia,serif;width:620px;border-collapse:collapse;background:#ffffff;">
-  <tr><td colspan="3" style="background:#1A505B;height:3px;font-size:0;line-height:0;padding:0;"></td></tr>
-  <tr>
-    <td style="padding:14px 20px;vertical-align:top;width:290px;">
-
-      <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:600;color:#1A3A5C;letter-spacing:0.5px;line-height:1.1;margin-bottom:5px;">${name}</div>
-      <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:10px;color:#2D7D8A;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:8px;">${title}&nbsp;&nbsp;&middot;&nbsp;&nbsp;${dept}</div>
-      <div style="width:220px;height:1px;background:#2D7D8A;margin-bottom:12px;"></div>
-
-      <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-        <tr>
-          <td style="width:26px;padding-bottom:5px;vertical-align:middle;">
-            <div style="width:18px;height:18px;background:#1A505B;border-radius:50%;text-align:center;line-height:18px;font-size:9px;font-weight:600;color:#fff;font-family:Arial,sans-serif;display:inline-block;">T</div>
-          </td>
-          <td style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12.5px;color:#333;padding-bottom:5px;white-space:nowrap;">${phone}</td>
-        </tr>
-        <tr>
-          <td style="width:26px;padding-bottom:5px;vertical-align:middle;">
-            <div style="width:18px;height:18px;background:#1A505B;border-radius:50%;text-align:center;line-height:18px;font-size:9px;font-weight:600;color:#fff;font-family:Arial,sans-serif;display:inline-block;">E</div>
-          </td>
-          <td style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12.5px;color:#333;padding-bottom:5px;">${email}</td>
-        </tr>
-        <tr>
-          <td style="width:26px;padding-bottom:5px;vertical-align:middle;">
-            <div style="width:18px;height:18px;background:#1A505B;border-radius:50%;text-align:center;line-height:18px;font-size:9px;font-weight:600;color:#fff;font-family:Arial,sans-serif;display:inline-block;">A</div>
-          </td>
-          <td style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12.5px;color:#333;padding-bottom:5px;">${ADDR}</td>
-        </tr>
-        <tr>
-          <td style="width:26px;vertical-align:middle;">
-            <div style="width:18px;height:18px;background:#1A505B;border-radius:50%;text-align:center;line-height:18px;font-size:9px;font-weight:600;color:#fff;font-family:Arial,sans-serif;display:inline-block;">W</div>
-          </td>
-          <td style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12.5px;color:#333;">${WEB}</td>
-        </tr>
-      </table>
-
-    </td>
-    <td style="width:1px;background:#C8DDE0;padding:0;font-size:0;">&nbsp;</td>
-    <td style="padding:10px 16px;vertical-align:middle;text-align:center;">
-      <img src="logo.jpg" alt="Horizon Financial Advisors" width="285" style="display:block;max-width:285px;height:auto;" />
-    </td>
-  </tr>
-  <tr><td colspan="3" style="background:#1A505B;height:3px;font-size:0;line-height:0;padding:0;"></td></tr>
-  <tr>
-    <td colspan="3" style="padding:7px 20px 5px;">
-      <div style="font-family:Georgia,serif;font-size:6px;color:#BBBBBB;line-height:1.5;">IRS CIRCULAR 230 DISCLOSURE REQUIREMENT: IRS Circular 230 requires us to notify you that any tax advice contained in this communication (including attachments) is not intended or written to be used, and cannot be used, by any person for the purpose of (a) avoiding tax penalties that may be imposed by law or (b) promoting, marketing, or recommending to another party any transaction or matter addressed herein. CONFIDENTIALITY NOTICE: If you have received this e-mail in error, please immediately notify the sender by e-mail at the address shown. This e-mail transmission may contain confidential information. This information is intended only for the use of the individual(s) or entity to whom it is intended even if addressed incorrectly. Please delete it from your files if you are not the intended recipient. Thank you for your compliance.</div>
-    </td>
-  </tr>
-</table>`;
+function fmtPhone(el){
+  var v=el.value.replace(/\D/g,'');
+  if(v.length<=3) el.value=v;
+  else if(v.length<=6) el.value=v.slice(0,3)+'-'+v.slice(3);
+  else el.value=v.slice(0,3)+'-'+v.slice(3,6)+'-'+v.slice(6,10);
 }
 
-function update() {
-  const name  = get('f-name')         || 'Full Name';
-  const title = get('f-title')        || 'Title';
-  const dept  = get('f-dept')         || 'Department';
-  const phone = get('f-phone')        || '000-000-0000';
-  const prefix= get('f-email-prefix') || 'yourname';
-  const email = prefix + '@cpataxaccounting.net';
-  document.getElementById('sig-preview').innerHTML = buildSig(name, title, dept, phone, email);
+function iconRow(emoji, txt){
+  return '<tr>'
+    +'<td width="26" style="padding:0 0 6px 0;vertical-align:middle;">'
+    +'<div style="width:20px;height:20px;background-color:#1A505B;border-radius:50%;'
+    +'text-align:center;line-height:20px;font-size:12px;display:inline-block;">'+emoji+'</div>'
+    +'</td>'
+    +'<td style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:12.5px;'
+    +'color:#333;padding:0 0 6px 8px;vertical-align:middle;">'+txt+'</td>'
+    +'</tr>';
 }
 
-async function copySignature() {
-  const name  = get('f-name')         || 'Full Name';
-  const title = get('f-title')        || 'Title';
-  const dept  = get('f-dept')         || 'Department';
-  const phone = get('f-phone')        || '000-000-0000';
-  const prefix= get('f-email-prefix') || 'yourname';
-  const email = prefix + '@cpataxaccounting.net';
-  const sigHTML = buildSig(name, title, dept, phone, email);
+function buildSig(name,title,dept,phone,email){
+  var addr='4000 Blvd Suite 555-S, Hollywood, FL 33021';
+  var web='www.cpataxaccounting.net';
+  return '<table cellpadding="0" cellspacing="0" border="0" style="font-family:\'Cormorant Garamond\',Georgia,serif;width:620px;border-collapse:collapse;background:#ffffff;">'
+  +'<tr><td colspan="3" style="background:#1A505B;height:3px;font-size:0;line-height:0;padding:0;"></td></tr>'
+  +'<tr>'
+  +'<td style="padding:14px 20px;vertical-align:top;width:290px;">'
+  +'<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:22px;font-weight:600;color:#1A3A5C;letter-spacing:0.5px;line-height:1.1;margin-bottom:5px;">'+name+'</div>'
+  +'<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-size:10px;color:#2D7D8A;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:8px;">'+title+'&nbsp;&nbsp;&middot;&nbsp;&nbsp;'+dept+'</div>'
+  +'<div style="width:220px;height:1px;background:#2D7D8A;margin-bottom:12px;"></div>'
+  +'<table cellpadding="0" cellspacing="0" border="0">'
+  +iconRow('&#128222;',phone)
+  +iconRow('&#9993;',email)
+  +iconRow('&#128205;',addr)
+  +iconRow('&#127760;',web)
+  +'</table>'
+  +'</td>'
+  +'<td style="width:1px;background:#C8DDE0;padding:0;font-size:0;">&nbsp;</td>'
+  +'<td style="padding:10px 16px;vertical-align:middle;text-align:center;">'
+  +'<img src="logo.jpg" alt="Horizon Financial Advisors" width="285" style="display:block;max-width:285px;height:auto;" />'
+  +'</td>'
+  +'</tr>'
+  +'<tr><td colspan="3" style="background:#1A505B;height:3px;font-size:0;line-height:0;padding:0;"></td></tr>'
+  +'<tr><td colspan="3" style="padding:7px 20px 5px;">'
+  +'<div style="font-family:Georgia,serif;font-size:6px;color:#BBBBBB;line-height:1.5;">IRS CIRCULAR 230 DISCLOSURE REQUIREMENT: IRS Circular 230 requires us to notify you that any tax advice contained in this communication (including attachments) is not intended or written to be used, and cannot be used, by any person for the purpose of (a) avoiding tax penalties that may be imposed by law or (b) promoting, marketing, or recommending to another party any transaction or matter addressed herein. CONFIDENTIALITY NOTICE: If you have received this e-mail in error, please immediately notify the sender by e-mail at the address shown. This e-mail transmission may contain confidential information. This information is intended only for the use of the individual(s) or entity to whom it is intended even if addressed incorrectly. Please delete it from your files if you are not the intended recipient. Thank you for your compliance.</div>'
+  +'</td></tr>'
+  +'</table>';
+}
 
-  const btn = document.getElementById('copy-btn');
+function update(){
+  var name  = get('f-name')  || 'Full Name';
+  var title = get('f-title') || 'Title';
+  var dept  = get('f-dept')  || 'Department';
+  var phone = get('f-phone') || '000-000-0000';
+  var pfx   = get('f-email') || 'yourname';
+  var email = pfx+'@cpataxaccounting.net';
+  document.getElementById('sig-preview').innerHTML = buildSig(name,title,dept,phone,email);
+}
+
+async function copySig(){
+  var name  = get('f-name')  || 'Full Name';
+  var title = get('f-title') || 'Title';
+  var dept  = get('f-dept')  || 'Department';
+  var phone = get('f-phone') || '000-000-0000';
+  var pfx   = get('f-email') || 'yourname';
+  var email = pfx+'@cpataxaccounting.net';
+  var sig   = buildSig(name,title,dept,phone,email);
+  var btn   = document.getElementById('copy-btn');
   try {
-    await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([sigHTML], {type:'text/html'})})]);
+    await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([sig],{type:'text/html'})})]);
   } catch(e) {
-    const el = document.getElementById('sig-preview');
-    const range = document.createRange();
-    range.selectNodeContents(el);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-    document.execCommand('copy');
-    sel.removeAllRanges();
+    var el=document.getElementById('sig-preview');
+    var r=document.createRange(); r.selectNodeContents(el);
+    var s=window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    document.execCommand('copy'); s.removeAllRanges();
   }
-  btn.textContent = '✓ Copied! — Paste into Outlook';
+  btn.textContent='✓  Copied! — Paste into Outlook';
   btn.classList.add('copied');
-  setTimeout(() => {
-    btn.textContent = 'Copy Signature';
-    btn.classList.remove('copied');
-  }, 3000);
+  setTimeout(function(){ btn.textContent='Copy Signature'; btn.classList.remove('copied'); },3000);
 }
 
 update();
